@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daftar Produk - Warung Sinon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; font-family: 'Poppins', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: #f3f3ff; color: #333; padding: 20px; min-height: 100vh; }
+
+    h1 { text-align: center; color: #6a0dad; font-size: 1.6rem; margin-bottom: 6px; font-weight: 700; }
+    .subtitle { text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 24px; }
+
+    .toolbar { max-width: 1000px; margin: 0 auto 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+
+    .select-main { flex: 1; min-width: 240px; position: relative; }
+    .select-main::before {
+      content: "🛍️"; position: absolute; left: 18px; top: 50%;
+      transform: translateY(-50%); font-size: 1.2rem; pointer-events: none; z-index: 1;
+    }
+    .select-main select {
+      width: 100%; padding: 16px 48px 16px 52px; border-radius: 14px;
+      border: 2px solid #6a0dad; background: white; font-size: 1rem; font-family: inherit;
+      font-weight: 700; color: #6a0dad; cursor: pointer; appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236a0dad' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat; background-position: right 16px center; background-size: 18px;
+      box-shadow: 0 4px 16px rgba(106, 13, 173, 0.12); transition: all 0.2s ease;
+    }
+    .select-main select:hover { box-shadow: 0 6px 20px rgba(106, 13, 173, 0.18); }
+    .select-main select:focus { outline: none; box-shadow: 0 0 0 4px rgba(106, 13, 173, 0.15); }
+    .select-main select.placeholder {
+      color: #888; font-weight: 600; border-color: #ddd;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .select-sort { min-width: 180px; }
+    .select-sort select {
+      width: 100%; padding: 16px 40px 16px 16px; border-radius: 14px;
+      border: 2px solid #ddd; background: white; font-size: 0.88rem; font-family: inherit;
+      font-weight: 600; color: #6a0dad; cursor: pointer; appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236a0dad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat; background-position: right 14px center; background-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .select-sort select:focus { outline: none; border-color: #6a0dad; box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1); }
+    .select-sort.hidden { display: none; }
+
+    .welcome {
+      max-width: 560px; margin: 40px auto; text-align: center; background: white;
+      border-radius: 20px; padding: 48px 28px; box-shadow: 0 4px 24px rgba(106, 13, 173, 0.08);
+      border: 1px solid #f0eaff; animation: fadeUp 0.4s ease;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .welcome-icon { font-size: 4rem; margin-bottom: 16px; display: block; animation: floatIcon 3s ease-in-out infinite; }
+    @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .welcome h2 { margin: 0 0 10px; color: #6a0dad; font-size: 1.3rem; font-weight: 800; }
+    .welcome p { margin: 0 0 20px; color: #666; font-size: 0.92rem; line-height: 1.6; }
+    .welcome-hint {
+      display: inline-flex; align-items: center; gap: 8px; background: #f1effd;
+      color: #5a00a1; padding: 10px 18px; border-radius: 12px; font-size: 0.82rem; font-weight: 600;
+    }
+    .welcome-hint b { color: #6a0dad; }
+
+    .info-bar {
+      max-width: 1000px; margin: 0 auto 12px; font-size: 0.82rem; color: #666; padding: 8px 4px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+    }
+    .info-bar b { color: #6a0dad; }
+    .info-bar .sort-info {
+      font-size: 0.75rem; color: #999; background: white; padding: 4px 10px;
+      border-radius: 8px; border: 1px solid #eee;
+    }
+
+    .table-wrap {
+      max-width: 1000px; margin: 0 auto; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05); background: white; animation: fadeUp 0.3s ease;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; text-align: left; font-size: 0.88rem; vertical-align: middle; }
+    th {
+      background: #6a0dad; color: white; font-size: 0.78rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.3px; position: sticky; top: 0; z-index: 2; white-space: nowrap;
+    }
+    th.sortable { cursor: pointer; user-select: none; transition: background 0.15s; }
+    th.sortable:hover { background: #5a00a1; }
+    th.sortable::after { content: " ⇅"; opacity: 0.4; font-size: 0.75rem; }
+    th.sortable.asc::after { content: " ▲"; opacity: 1; }
+    th.sortable.desc::after { content: " ▼"; opacity: 1; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #faf8ff; }
+
+    .cell-nama { font-weight: 600; color: #222; line-height: 1.4; }
+    .cell-harga { color: #6a0dad; font-weight: 700; white-space: nowrap; }
+    .cell-kategori {
+      font-size: 0.72rem; color: #6a0dad; background: #f1effd; padding: 3px 10px;
+      border-radius: 12px; font-weight: 600; display: inline-block; white-space: nowrap;
+    }
+    .cell-sub { font-size: 0.78rem; color: #555; font-weight: 500; }
+    .cell-sub-empty { color: #ccc; font-weight: 400; }
+
+    .badge-auto {
+      font-size: 0.6rem; background: #cfe2ff; color: #084298; padding: 2px 6px;
+      border-radius: 6px; font-weight: 700; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px;
+    }
+    .badge-manual-ov {
+      font-size: 0.6rem; background: #fff3cd; color: #856404; padding: 2px 6px;
+      border-radius: 6px; font-weight: 700; margin-left: 4px; vertical-align: middle; letter-spacing: 0.3px;
+    }
+
+    .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; display: inline-block; white-space: nowrap; }
+    .status-badge.ready    { background: #d4edda; color: #155724; }
+    .status-badge.habis    { background: #fff3cd; color: #856404; }
+    .status-badge.error    { background: #f8d7da; color: #721c24; }
+    .status-badge.nonaktif { background: #e2e3e5; color: #6c757d; }
+
+    .empty, .loading { text-align: center; padding: 3rem 1rem; color: #999; max-width: 1000px; margin: 0 auto; }
+    .empty-icon { font-size: 3rem; margin-bottom: 0.5rem; display: block; }
+    .loading::before {
+      content: ""; display: block; width: 32px; height: 32px;
+      border: 3px solid #e3dbff; border-top-color: #6a0dad; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 700px) {
+      body { padding: 12px; }
+      h1 { font-size: 1.3rem; }
+      .toolbar { flex-direction: column; gap: 8px; }
+      .select-main, .select-sort { min-width: 0; }
+      .table-wrap { display: none; }
+      .welcome { padding: 36px 22px; margin: 24px auto; }
+      .welcome-icon { font-size: 3rem; }
+      .welcome h2 { font-size: 1.15rem; }
+      .mobile-list { display: block; max-width: 1000px; margin: 0 auto; }
+      .mobile-card {
+        background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; justify-content: space-between;
+        gap: 10px; align-items: flex-start;
+      }
+      .mobile-card .info { flex: 1; min-width: 0; }
+      .mobile-card .nama { font-weight: 700; color: #222; margin-bottom: 4px; line-height: 1.35; }
+      .mobile-card .sub { font-size: 0.75rem; color: #555; margin-bottom: 6px; font-weight: 500; }
+      .mobile-card .kategori {
+        font-size: 0.68rem; color: #6a0dad; background: #f1effd;
+        padding: 2px 8px; border-radius: 10px; font-weight: 600; display: inline-block;
+      }
+      .mobile-card .kanan { text-align: right; flex-shrink: 0; }
+      .mobile-card .harga { font-weight: 700; color: #6a0dad; font-size: 1rem; margin-bottom: 6px; white-space: nowrap; }
+    }
+    @media (min-width: 701px) { .mobile-list { display: none; } }
+  </style>
+</head>
+<body>
+
+  <h1>Daftar Produk Warung Sinon</h1>
+  <div class="subtitle">Pilih produk untuk mulai cek harga</div>
+
+  <div class="toolbar">
+    <div class="select-main">
+      <select id="kategoriSelect" onchange="pilihKategori()" class="placeholder">
+        <option value="">Pilih Produk</option>
+      </select>
+    </div>
+    <div class="select-sort hidden" id="sortWrap">
+      <select id="sortSelect" onchange="ubahSort()">
+        <option value="nama">Urut: Nama A-Z</option>
+        <option value="nama-desc">Urut: Nama Z-A</option>
+        <option value="harga-asc">Urut: Termurah</option>
+        <option value="harga-desc">Urut: Termahal</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="info-bar" id="infoBar" style="display:none;"></div>
+
+  <div class="table-wrap" id="tableWrap" style="display:none;">
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable" data-sort="nama" onclick="sortByHeader('nama')">Nama Produk</th>
+          <th class="sortable" data-sort="kategori" onclick="sortByHeader('kategori')">Kategori</th>
+          <th class="sortable" data-sort="harga" onclick="sortByHeader('harga')">Harga</th>
+          <th>Status</th>
+          <th>Sub Kategori</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="mobile-list" id="mobileList"></div>
+  <div id="stateContainer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+
+  <script>
+    // ============================================================
+    // KONFIG
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGtIGgcT5-WF74vuIuC11BQMNMb_S2BeY",
+      authDomain: "warung-sinon.firebaseapp.com",
+      databaseURL: "https://warung-sinon-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "warung-sinon"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let allProduk = [];
+    let allGroups = [];         // array of { key, label, icon, count, order }
+    let filterAktif = null;     // group key
+    let currentSort = "nama";
+
+    // ============================================================
+    // HELPER ESCAPE
+    // ============================================================
+    function esc(s) {
+      if (s === null || s === undefined) return "";
+      return String(s).replace(/[&<>"']/g, m => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+
+    // ============================================================
+    // HUMANIZE
+    // ============================================================
+    const ACRONYM_MAP = {
+      ml: "ML", mlbb: "MLBB", ff: "FF", gi: "GI", hsr: "HSR", zzz: "ZZZ",
+      cod: "COD", pubg: "PUBG", aov: "AOV", hok: "HoK",
+      dana: "DANA", ovo: "OVO", gopay: "GoPay", shopeepay: "ShopeePay", linkaja: "LinkAja",
+      xl: "XL", tri: "Tri", byu: "By.U", byou: "By.U",
+      apk: "APK", vp: "VP", dm: "DM", vip: "VIP", hdi: "HDI",
+      pln: "PLN", pdam: "PDAM", bpjs: "BPJS", tv: "TV",
+      psn: "PSN", vpn: "VPN", gpt: "GPT", ai: "AI"
+    };
+
+    function humanize(text) {
+      if (text === null || text === undefined) return "";
+      let s = String(text).trim();
+      if (!s) return "";
+      s = s.replace(/[_\-]+/g, " ").replace(/\s+/g, " ").trim();
+      return s.split(" ").map(word => {
+        if (!word) return "";
+        if (!/[a-zA-Z]/.test(word)) return word;
+        const lower = word.toLowerCase();
+        if (ACRONYM_MAP[lower]) return ACRONYM_MAP[lower];
+        if (/^[A-Z]{2,6}$/.test(word)) return word;
+        if (/^[A-Z][a-z]/.test(word)) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }).filter(Boolean).join(" ");
+    }
+
+    // ============================================================
+    // LABEL KATEGORI (untuk kolom "Kategori" di tabel)
+    // ============================================================
+    const KATEGORI_LABEL = {
+      game:        { label: "Game",             icon: "🎮" },
+      premium_app: { label: "Premium App",      icon: "📱" },
+      premium:     { label: "Premium App",      icon: "📱" },
+      pulsa:       { label: "Pulsa",            icon: "📞" },
+      data:        { label: "Paket Data",       icon: "📶" },
+      ewallet:     { label: "E-Wallet",         icon: "💰" },
+      token_pln:   { label: "Token PLN",        icon: "⚡" },
+      pln:         { label: "Token PLN",        icon: "⚡" },
+      sosmed:      { label: "Sosial Media",     icon: "💬" },
+      voucher:     { label: "Voucher",          icon: "🎟️" },
+      robux:       { label: "Robux",            icon: "🟢" },
+      manual:      { label: "Manual",           icon: "🛠️" }
+    };
+
+    function labelKategori(key) {
+      return KATEGORI_LABEL[key] || { label: humanize(key), icon: "📦" };
+    }
+
+    // ============================================================
+    // GAME GROUP MAPPING — label spesifik per game
+    // ============================================================
+    const GAME_GROUPS = {
+      ml:        { label: "Diamond ML",      icon: "💎" },
+      mlbb:      { label: "Diamond ML",      icon: "💎" },
+      mobile_legends: { label: "Diamond ML", icon: "💎" },
+      ff:        { label: "Diamond FF",      icon: "💎" },
+      free_fire: { label: "Diamond FF",      icon: "💎" },
+      gi:        { label: "Genshin Crystal", icon: "⚔️" },
+      genshin:   { label: "Genshin Crystal", icon: "⚔️" },
+      valorant:  { label: "Valorant Points", icon: "🎯" },
+      valo:      { label: "Valorant Points", icon: "🎯" },
+      pubg:      { label: "UC PUBG",         icon: "🎯" },
+      cod:       { label: "CP COD",          icon: "🎯" },
+      aov:       { label: "AOV Voucher",     icon: "⚔️" },
+      hok:       { label: "HoK Voucher",     icon: "⚔️" }
+    };
+
+    function gameGroup(sub) {
+      const key = String(sub || "").toLowerCase().trim();
+      return GAME_GROUPS[key] || { label: "Game " + humanize(sub), icon: "🎮" };
+    }
+
+    // ============================================================
+    // PREMIUM APP BRAND DETECTION
+    // ============================================================
+    const PREMIUM_BRANDS = [
+      { key: "canva",         label: "Canva Pro",        icon: "🎨", match: ["canva"] },
+      { key: "capcut",        label: "CapCut Pro",       icon: "✂️", match: ["capcut"] },
+      { key: "alight_motion", label: "Alight Motion",    icon: "🎬", match: ["alight motion", "alight_motion"] },
+      { key: "chatgpt",       label: "ChatGPT Plus",     icon: "🤖", match: ["chatgpt", "chat gpt"] },
+      { key: "gemini",        label: "Gemini Pro",       icon: "✨", match: ["gemini"] },
+      { key: "perplexity",    label: "Perplexity Pro",   icon: "🔍", match: ["perplexity"] },
+      { key: "claude",        label: "Claude Pro",       icon: "🧠", match: ["claude"] },
+      { key: "spotify",       label: "Spotify Premium",  icon: "🎵", match: ["spotify"] },
+      { key: "youtube",       label: "YouTube Premium",  icon: "▶️", match: ["youtube", "yt premium"] },
+      { key: "netflix",       label: "Netflix",          icon: "🎬", match: ["netflix"] },
+      { key: "viu",           label: "Viu",              icon: "📺", match: ["viu"] },
+      { key: "vidio",         label: "Vidio",            icon: "📺", match: ["vidio"] },
+      { key: "wetv",          label: "WeTV",             icon: "📺", match: ["wetv", "we tv"] },
+      { key: "iqiyi",         label: "iQIYI",            icon: "📺", match: ["iqiyi"] },
+      { key: "disney",        label: "Disney+",          icon: "🏰", match: ["disney"] },
+      { key: "adobe",         label: "Adobe",            icon: "🎨", match: ["adobe", "photoshop", "illustrator", "premiere pro"] },
+      { key: "grammarly",     label: "Grammarly",        icon: "✍️", match: ["grammarly"] },
+      { key: "duolingo",      label: "Duolingo",         icon: "🦉", match: ["duolingo"] },
+      { key: "coursera",      label: "Coursera",         icon: "🎓", match: ["coursera"] },
+      { key: "udemy",         label: "Udemy",            icon: "🎓", match: ["udemy"] },
+      { key: "skillshare",    label: "Skillshare",       icon: "🎓", match: ["skillshare"] },
+      { key: "linkedin",      label: "LinkedIn",         icon: "💼", match: ["linkedin"] },
+      { key: "zoom",          label: "Zoom",             icon: "📹", match: ["zoom"] },
+      { key: "ms_office",     label: "MS Office",        icon: "📄", match: ["microsoft office", "ms office", "office 365"] },
+      { key: "wps",           label: "WPS Office",       icon: "📄", match: ["wps"] },
+      { key: "picsart",       label: "PicsArt",          icon: "🎨", match: ["picsart"] },
+      { key: "kinemaster",    label: "KineMaster",       icon: "🎬", match: ["kinemaster", "kine master"] },
+      { key: "vn",            label: "VN Editor",        icon: "🎬", match: ["vn editor", "vn video", "vn pro"] },
+      { key: "filmora",       label: "Filmora",          icon: "🎬", match: ["filmora"] },
+      { key: "inshot",        label: "InShot",           icon: "🎬", match: ["inshot"] },
+      { key: "pixellab",      label: "PixelLab",         icon: "🎨", match: ["pixellab", "pixel lab"] },
+      { key: "wink",          label: "Wink",             icon: "✨", match: ["wink"] },
+      { key: "rem*ni",        label: "Remini",           icon: "✨", match: ["remini"] }
+    ];
+
+    function detectPremiumBrand(nama) {
+      const lower = String(nama || "").toLowerCase();
+      for (const b of PREMIUM_BRANDS) {
+        for (const m of b.match) {
+          if (lower.includes(m)) return b;
+        }
+      }
+      // Fallback: first word
+      const firstWord = String(nama || "").split(/[\s\d]/)[0] || "premium";
+      return {
+        key: firstWord.toLowerCase().replace(/[^a-z0-9]/g, ""),
+        label: humanize(firstWord),
+        icon: "📱"
+      };
+    }
+
+    // ============================================================
+    // DERIVE GROUP INFO PER PRODUK
+    // ============================================================
+    function getGroupInfo(product) {
+      const path = product.pathArr;
+      const kat = product.kategori;
+      const isSync = product.isSync;
+
+      // === PREMIUM APP (sync) — pakai brand detection ===
+      if (isSync) {
+        const brand = detectPremiumBrand(product.namaAsli || product.nama);
+        return {
+          key: "premium_app::" + brand.key,
+          label: brand.label,
+          icon: brand.icon,
+          order: 20
+        };
+      }
+
+      // === NON-SYNC — pakai path ===
+      // Strip leading "otomatis" kalau ada
+      let p = path.slice(0, -1); // exclude product ID
+      if (p[0] === "otomatis") p = p.slice(1);
+
+      // Kalau tidak ada sub-segment, fallback ke kategori
+      if (!p.length) {
+        const l = labelKategori(kat);
+        return { key: kat + "::_", label: l.label, icon: l.icon, order: 80 };
+      }
+
+      const top = p[0];
+      const sub = p.slice(1).join("_");
+
+      // Game
+      if (top === "game") {
+        const g = gameGroup(sub);
+        return { key: "game::" + (sub || "_"), label: g.label, icon: g.icon, order: 10 };
+      }
+
+      // Pulsa
+      if (top === "pulsa") {
+        return {
+          key: "pulsa::" + (sub || "_"),
+          label: "Pulsa " + humanize(sub),
+          icon: "📞",
+          order: 30
+        };
+      }
+
+      // Data
+      if (top === "data") {
+        return {
+          key: "data::" + (sub || "_"),
+          label: "Data " + humanize(sub),
+          icon: "📶",
+          order: 40
+        };
+      }
+
+      // E-Wallet
+      if (top === "ewallet") {
+        return {
+          key: "ewallet::" + (sub || "_"),
+          label: humanize(sub),
+          icon: "💰",
+          order: 50
+        };
+      }
+
+      // PLN
+      if (top === "token_pln" || top === "pln") {
+        return { key: "pln::_", label: "Token PLN", icon: "⚡", order: 60 };
+      }
+
+      // Sosmed
+      if (top === "sosmed") {
+        return {
+          key: "sosmed::" + (sub || "_"),
+          label: humanize(sub || "Sosial Media"),
+          icon: "💬",
+          order: 70
+        };
+      }
+
+      // Robux
+      if (top === "robux") {
+        return { key: "robux::_", label: "Robux", icon: "🟢", order: 65 };
+      }
+
+      // Voucher
+      if (top === "voucher") {
+        return {
+          key: "voucher::" + (sub || "_"),
+          label: humanize(sub || "Voucher"),
+          icon: "🎟️",
+          order: 68
+        };
+      }
+
+      // Fallback generic
+      const l = labelKategori(top);
+      return {
+        key: top + "::" + (sub || "_"),
+        label: l.label + (sub ? " " + humanize(sub) : ""),
+        icon: l.icon,
+        order: 90
+      };
+    }
+
+    // ============================================================
+    // AMBIL HARGA + VALIDASI
+    // ============================================================
+    function ambilHarga(node) {
+      const manual = Number(node.hargaJualManual) || 0;
+      if (manual > 0) return manual;
+      const jual = Number(node.hargaJual) || 0;
+      if (jual > 0) return jual;
+      return Number(node.harga) || 0;
+    }
+
+    function isProdukValid(node) {
+      if (!node || typeof node !== "object") return false;
+      return !!node.nama && (
+        node.hargaJual !== undefined ||
+        node.harga !== undefined ||
+        node.hargaJualManual !== undefined
+      );
+    }
+
+    // ============================================================
+    // STATUS
+    // ============================================================
+    function statusProduk(statusRaw, stok) {
+      const s = (statusRaw || "").toLowerCase();
+      if (!s || s === "aktif" || s === "ready" || s === "tersedia" || s === "normal") {
+        if (typeof stok === "number" && stok === 0) return { class: "habis", label: "Stok Habis" };
+        return { class: "ready", label: "Tersedia" };
+      }
+      if (s === "nonaktif" || s === "off") return { class: "nonaktif", label: "Nonaktif" };
+      if (s.includes("habis") || s.includes("kosong")) return { class: "habis", label: "Stok Habis" };
+      if (s === "error" || s === "gangguan") return { class: "error", label: "Gangguan" };
+      return { class: "ready", label: "Tersedia" };
+    }
+
+    // ============================================================
+    // WALK PRODUK
+    // ============================================================
+    function walkProduk(node, pathArr, hasil) {
+      if (!node || typeof node !== "object") return;
+      const lastKey = pathArr[pathArr.length - 1];
+      if (lastKey === "_setting") return;
+
+      if (isProdukValid(node)) {
+        const harga = ambilHarga(node);
+        const statusRaw = (node.status || "aktif").toLowerCase();
+        if (statusRaw === "nonaktif" || statusRaw === "off") return;
+        if (harga <= 0) return;
+
+        const isSync = !!node.produkIdProvider;
+        let kategori, subkategori;
+
+        if (isSync) {
+          kategori = "premium_app";
+          const idx = pathArr.indexOf("premium_app");
+          const after = idx >= 0 ? pathArr.slice(idx + 1, -1) : [];
+          subkategori = after.join(" / ");
+        } else {
+          // Strip "otomatis" dari kategori
+          const firstNonOtomatis = pathArr[0] === "otomatis" ? 1 : 0;
+          kategori = pathArr[firstNonOtomatis] || "lain";
+          subkategori = pathArr.slice(firstNonOtomatis + 1, -1).join(" / ");
+        }
+
+        const stok = Number(node.stok);
+
+        hasil.push({
+          nama:        humanize(node.nama || "-"),
+          namaAsli:    String(node.nama || "-"),
+          harga:       harga,
+          hargaManual: Number(node.hargaJualManual) || 0,
+          isSync:      isSync,
+          stok:        isNaN(stok) ? undefined : stok,
+          statusRaw:   node.status || "aktif",
+          kategori:    kategori,
+          subkategori: subkategori,
+          pathArr:     pathArr,
+          fullPath:    pathArr.join("/"),
+          urutan:      Number(node.urutan) || 999
+        });
+        return;
+      }
+
+      for (const key in node) {
+        walkProduk(node[key], [...pathArr, key], hasil);
+      }
+    }
+
+    // ============================================================
+    // BUILD GROUPS INDEX
+    // ============================================================
+    function buildGroups() {
+      const map = {};
+
+      allProduk.forEach(p => {
+        const g = getGroupInfo(p);
+        p.groupKey = g.key;
+        p.groupLabel = g.label;
+        p.groupIcon = g.icon;
+        p.groupOrder = g.order;
+
+        if (!map[g.key]) {
+          map[g.key] = {
+            key: g.key,
+            label: g.label,
+            icon: g.icon,
+            order: g.order,
+            count: 0
+          };
+        }
+        map[g.key].count++;
+      });
+
+      allGroups = Object.values(map).sort((a, b) => {
+        if (a.order !== b.order) return a.order - b.order;
+        return a.label.localeCompare(b.label, "id");
+      });
+    }
+
+    // ============================================================
+    // BUILD DROPDOWN
+    // ============================================================
+    function buildDropdown() {
+      const sel = document.getElementById("kategoriSelect");
+
+      let html = `<option value="">Pilih Produk</option>`;
+      allGroups.forEach(g => {
+        html += `<option value="${esc(g.key)}">${g.icon} ${esc(g.label)} (${g.count})</option>`;
+      });
+
+      sel.innerHTML = html;
+      sel.classList.add("placeholder");
+    }
+
+    // ============================================================
+    // WELCOME
+    // ============================================================
+    function showWelcome() {
+      const stateEl = document.getElementById("stateContainer");
+      const tableWrap = document.getElementById("tableWrap");
+      const mobileList = document.getElementById("mobileList");
+      const infoBar = document.getElementById("infoBar");
+
+      tableWrap.style.display = "none";
+      infoBar.style.display = "none";
+      mobileList.innerHTML = "";
+
+      stateEl.innerHTML = `
+        <div class="welcome">
+          <span class="welcome-icon">🛍️</span>
+          <h2>Selamat Datang di Katalog Produk</h2>
+          <p>Pilih produk di atas untuk melihat daftar harga yang tersedia.</p>
+          <div class="welcome-hint">
+            💡 Tersedia <b>${allProduk.length}</b> produk dalam <b>${allGroups.length}</b> grup
+          </div>
+        </div>
+      `;
+    }
+
+    // ============================================================
+    // LOAD PRODUK
+    // ============================================================
+    async function loadProduk() {
+      const stateEl = document.getElementById("stateContainer");
+      stateEl.innerHTML = '<div class="loading">Memuat data produk...</div>';
+
+      try {
+        const snap = await db.ref("produk").once("value");
+
+        if (!snap.exists()) {
+          stateEl.innerHTML = `
+            <div class="empty">
+              <span class="empty-icon">📦</span>
+              <p>Belum ada produk.</p>
+            </div>
+          `;
+          return;
+        }
+
+        allProduk = [];
+        walkProduk(snap.val(), [], allProduk);
+
+        if (!allProduk.length) {
+          stateEl.innerHTML = `
+            <div class="empty">
+              <span class="empty-icon">📦</span>
+              <p>Belum ada produk aktif.</p>
+            </div>
+          `;
+          return;
+        }
+
+        buildGroups();
+
+        console.log(`[katalog] ${allProduk.length} produk · ${allGroups.length} grup`);
+        console.log("[groups]", allGroups.map(g => `${g.icon} ${g.label} (${g.count})`));
+
+        buildDropdown();
+        showWelcome();
+
+      } catch (err) {
+        console.error("[load produk]", err);
+        stateEl.innerHTML = `<div class="empty">Gagal memuat produk: ${esc(err.message)}</div>`;
+      }
+    }
+
+    // ============================================================
+    // PILIH PRODUK (GROUP)
+    // ============================================================
+    function pilihKategori() {
+      const sel = document.getElementById("kategoriSelect");
+      const val = sel.value;
+
+      if (!val) {
+        sel.classList.add("placeholder");
+      } else {
+        sel.classList.remove("placeholder");
+      }
+
+      filterAktif = val || null;
+
+      const sortWrap = document.getElementById("sortWrap");
+      if (filterAktif) {
+        sortWrap.classList.remove("hidden");
+        renderProduk();
+      } else {
+        sortWrap.classList.add("hidden");
+        showWelcome();
+      }
+    }
+
+    // ============================================================
+    // SORT
+    // ============================================================
+    function sortData(data) {
+      const sorted = [...data];
+      switch (currentSort) {
+        case "nama":         sorted.sort((a, b) => a.nama.localeCompare(b.nama, "id")); break;
+        case "nama-desc":    sorted.sort((a, b) => b.nama.localeCompare(a.nama, "id")); break;
+        case "harga-asc":    sorted.sort((a, b) => a.harga - b.harga); break;
+        case "harga-desc":   sorted.sort((a, b) => b.harga - a.harga); break;
+        default:             sorted.sort((a, b) => a.nama.localeCompare(b.nama, "id"));
+      }
+      return sorted;
+    }
+
+    // ============================================================
+    // RENDER PRODUK
+    // ============================================================
+    function renderProduk() {
+      const tableBody = document.getElementById("tableBody");
+      const tableWrap = document.getElementById("tableWrap");
+      const mobileList = document.getElementById("mobileList");
+      const infoBar = document.getElementById("infoBar");
+      const stateEl = document.getElementById("stateContainer");
+
+      if (!filterAktif) { showWelcome(); return; }
+
+      let data = allProduk.filter(p => p.groupKey === filterAktif);
+      data = sortData(data);
+
+      const groupInfo = allGroups.find(g => g.key === filterAktif) || { label: "Produk", icon: "📦" };
+      const sortLabel = {
+        "nama": "Nama A-Z", "nama-desc": "Nama Z-A",
+        "harga-asc": "Termurah", "harga-desc": "Termahal"
+      }[currentSort] || "-";
+
+      infoBar.style.display = "flex";
+      infoBar.innerHTML = `
+        <span>${groupInfo.icon} <b>${esc(groupInfo.label)}</b> · <b>${data.length}</b> produk</span>
+        <span class="sort-info">📊 Urut: ${sortLabel}</span>
+      `;
+
+      if (!data.length) {
+        tableWrap.style.display = "none";
+        mobileList.innerHTML = "";
+        stateEl.innerHTML = `
+          <div class="empty">
+            <span class="empty-icon">📭</span>
+            <p>Tidak ada produk di grup ini.</p>
+          </div>
+        `;
+        return;
+      }
+
+      stateEl.innerHTML = "";
+      tableWrap.style.display = "";
+
+      // === DESKTOP TABLE ===
+      tableBody.innerHTML = "";
+      data.forEach(p => {
+        const st = statusProduk(p.statusRaw, p.stok);
+        const kat = labelKategori(p.kategori);
+        const subDisplay = p.subkategori
+          ? p.subkategori.split(" / ").filter(Boolean).map(humanize).join(" · ")
+          : "";
+
+        const badgeAuto = p.isSync ? '<span class="badge-auto">AUTO</span>' : "";
+        const badgeManual = p.hargaManual > 0 ? '<span class="badge-manual-ov">OVR</span>' : "";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="cell-nama">${esc(p.nama)}${badgeAuto}${badgeManual}</td>
+          <td><span class="cell-kategori">${kat.icon} ${esc(kat.label)}</span></td>
+          <td class="cell-harga">Rp ${p.harga.toLocaleString("id-ID")}</td>
+          <td><span class="status-badge ${st.class}">${st.label}</span></td>
+          <td class="cell-sub">${subDisplay ? esc(subDisplay) : '<span class="cell-sub-empty">—</span>'}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      // === MOBILE CARDS ===
+      mobileList.innerHTML = "";
+      data.forEach(p => {
+        const st = statusProduk(p.statusRaw, p.stok);
+        const kat = labelKategori(p.kategori);
+
+        const badgeAuto = p.isSync ? '<span class="badge-auto">AUTO</span>' : "";
+        const badgeManual = p.hargaManual > 0 ? '<span class="badge-manual-ov">OVR</span>' : "";
+
+        const card = document.createElement("div");
+        card.className = "mobile-card";
+        card.innerHTML = `
+          <div class="info">
+            <div class="nama">${esc(p.nama)}${badgeAuto}${badgeManual}</div>
+            <span class="kategori">${kat.icon} ${esc(kat.label)}</span>
+          </div>
+          <div class="kanan">
+            <div class="harga">Rp ${p.harga.toLocaleString("id-ID")}</div>
+            <span class="status-badge ${st.class}">${st.label}</span>
+          </div>
+        `;
+        mobileList.appendChild(card);
+      });
+
+      // Sort indicator
+      document.querySelectorAll("th.sortable").forEach(th => {
+        th.classList.remove("asc", "desc");
+        const field = th.dataset.sort;
+        if (currentSort === field) th.classList.add("asc");
+        else if (currentSort === field + "-desc") th.classList.add("desc");
+        else if (field === "harga" && currentSort === "harga-asc") th.classList.add("asc");
+        else if (field === "harga" && currentSort === "harga-desc") th.classList.add("desc");
+      });
+    }
+
+    function ubahSort() {
+      currentSort = document.getElementById("sortSelect").value;
+      renderProduk();
+    }
+
+    function sortByHeader(field) {
+      if (field === "nama") currentSort = currentSort === "nama" ? "nama-desc" : "nama";
+      else if (field === "harga") currentSort = currentSort === "harga-asc" ? "harga-desc" : "harga-asc";
+      else if (field === "kategori") currentSort = "nama";
+      const sel = document.getElementById("sortSelect");
+      const valid = ["nama", "nama-desc", "harga-asc", "harga-desc"];
+      if (valid.includes(currentSort)) sel.value = currentSort;
+      renderProduk();
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    loadProduk();
+  </script>
+
+</body>
+</html>
